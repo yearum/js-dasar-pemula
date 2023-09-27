@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Iki Cuaca Lurrd</title>
+
+</head>
+<body>
+    <h1>Iki Cuaca</h1>
+    <input type="text" id="cityInput" placeholder="Masukan Nama Kota">
+    <button onclick="getWeather()">Cari Cuaca</button>
+    <div id="weatherInfo"></div>
+
+    <script>
+        function getWeather(){
+            const apiKey='58fecd352ad344b7878154118adb9661';
+            const city= document.getElementById('cityInput').value
+            const url=`https://api.weatherbit.io/v2.0/current?city=${city}&key=${apiKey}&units=M`;
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const weatherInfo = document.getElementById('weatherInfo');
+                if(data.cod == 200) {
+                const temperature = data.main.temp;
+                const description = data.weather[0].description;
+                const iconCode = data.weather[0].icon;
+
+                const weatherHtml = `
+                <h2>Cuaca di ${city}</h2>
+                <p>Temperature: ${temperature}°C</p>
+                <p>Description: ${description}</p>
+                <img src="https://openweathermap.org/img/w/${iconCode}.png" alt="Icon Cuaca">
+                        `;
+                        weatherInfo.innerHTML = weatherHtml;
+                    } else {
+                        weatherInfo.innerHTML = 'Maaf, tidak dapat menemukan informasi cuaca.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const weatherInfo = document.getElementById('weatherInfo');
+                    weatherInfo.innerHTML = 'Maaf, terjadi kesalahan dalam mengambil data cuaca.';
+                });
+        }
+    </script>
+</body>
+</html>
